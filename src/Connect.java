@@ -67,6 +67,20 @@ public final class Connect {
 			e.printStackTrace();
 		}
 	}
+	public void executeInsertToProduct(String productName,int productCategory,int productPrice, int productStock) {
+		try {
+			pStat = con
+					.prepareStatement("INSERT INTO Products(product_name,product_category_id,product_price,product_stock) VALUES(?,?, ?, ?)");
+			pStat.setString(1, productName);
+			pStat.setInt(2, productCategory);
+			pStat.setInt(3, productPrice);
+			pStat.setInt(4, productStock);
+			pStat.execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	public void executeInsertToCategory(String category_name) {
 		try {

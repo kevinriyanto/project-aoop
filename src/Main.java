@@ -8,7 +8,7 @@ public class Main {
 			
 			@Override
 			public void run() {
-				new ManageCategoryForm();
+				new ManageProductForm();
 			}
 		});
 	}

@@ -121,6 +121,15 @@ public class ManageCategoryForm extends JFrame{
 		JButton insertBtn = new JButton("Insert");
 		JButton updateBtn = new JButton("Update");
 		JButton deleteBtn = new JButton("Delete");
+		JButton backBtn = new JButton("Back");
+		backBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				new AdminFormFrame();
+			}
+		});
 		insertBtn.addActionListener(new ActionListener() {
 			
 			@Override
@@ -173,6 +182,7 @@ public class ManageCategoryForm extends JFrame{
 		bottomPanel.add(insertBtn);
 		bottomPanel.add(updateBtn);
 		bottomPanel.add(deleteBtn);
+		bottomPanel.add(backBtn);
 		centerPanel.add(formPanel);
 		topPanel.add(pane);
 		

@@ -1,5 +1,7 @@
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -12,7 +14,30 @@ public class AdminFormFrame extends JFrame{
 		JButton prodBtn = new JButton("Manage Product");
 		JButton categoryBtn = new JButton("Manage Category");
 		JButton transBtn = new JButton("Manage Transaction");
-		
+		prodBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				new ManageProductForm();
+			}
+		});
+		categoryBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				new ManageCategoryForm();
+			}
+		});
+		transBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				new ManageTransactionForm();
+			}
+		});
 		centerPanel.add(prodBtn);
 		centerPanel.add(categoryBtn);
 		centerPanel.add(transBtn);

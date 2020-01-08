@@ -22,7 +22,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-public class ManageProductForm extends JFrame{
+public class ManageTransactionForm extends JFrame{
 	Connect con;
 	JTable table;
 	DefaultTableModel dtm;
@@ -82,7 +82,7 @@ public class ManageProductForm extends JFrame{
 		return -1;
 	}
 	int idCate = -1;
-	public ManageProductForm() {
+	public ManageTransactionForm() {
 		tHeader = new Vector<Object>();
 		cb = new JComboBox<>();
 		JTextField productName = new JTextField();
@@ -266,5 +266,5 @@ public class ManageProductForm extends JFrame{
 		setVisible(true);
 		
 	}
-	
+
 }

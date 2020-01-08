@@ -68,18 +68,11 @@ public final class Connect {
 		}
 	}
 
-	public void executeInsertToMsEvent(String id, String name, String venue,
-			int regPrice, int regStock, int vipPrice, int vipStock) {
+	public void executeInsertToCategory(String category_name) {
 		try {
 			pStat = con
-					.prepareStatement("INSERT INTO MsEvent VALUES(?, ?, ?, ?, ?, ?, ?)");
-			pStat.setString(1, id);
-			pStat.setString(2, name);
-			pStat.setString(3, venue);
-			pStat.setInt(4, regPrice);
-			pStat.setInt(5, regStock);
-			pStat.setInt(6, vipPrice);
-			pStat.setInt(7, vipStock);
+					.prepareStatement("INSERT INTO categories(category_name) VALUES(?)");
+			pStat.setString(1, category_name);
 			pStat.execute();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

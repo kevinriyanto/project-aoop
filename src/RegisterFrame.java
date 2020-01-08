@@ -75,8 +75,8 @@ public class RegisterFrame {
 		f.add(centerPanel, BorderLayout.CENTER);
 		f.add(topPanel, BorderLayout.NORTH);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setLocationRelativeTo(null);
 		f.setSize(300,200);
+		f.setLocationRelativeTo(null);
 		f.setVisible(true);
 	}
 

@@ -1,0 +1,11 @@
+paste mysql-connector-java-5.1.37-bin.jar file in jre/lib/ext folder
+
+Database connection:
+
+Class.forName("com.mysql.jdbc.Driver");
+
+// "jdbc:mysql://localhost:3306/prk" <-- prk nya diubah sesuai nama db nya
+// "root" <-- masukin username buat login ke mysql
+// "" <-- masukin password buat login ke mysql
+Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/prk","root","");  
+stmt = con.createStatement();  

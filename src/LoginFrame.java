@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 public class LoginFrame {
 	Connect con;
@@ -101,8 +102,8 @@ public class LoginFrame {
 		f.add(centerPanel, BorderLayout.CENTER);
 		f.add(topPanel, BorderLayout.NORTH);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setLocationRelativeTo(null);
 		f.setSize(300,150);
+		f.setLocationRelativeTo(null);
 		f.setVisible(true);
 	}
 

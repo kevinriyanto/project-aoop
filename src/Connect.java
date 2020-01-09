@@ -93,4 +93,17 @@ public final class Connect {
 			e.printStackTrace();
 		}
 	}
+	public void executeInsertToTransaction(int user_id,int product_id, int qty) {
+		try {
+			pStat = con
+					.prepareStatement("INSERT INTO transactions(user_id,product_id,qty) VALUES(?, ?, ?)");
+			pStat.setInt(1, user_id);
+			pStat.setInt(2, product_id);
+			pStat.setInt(3, qty);
+			pStat.execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

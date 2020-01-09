@@ -30,11 +30,13 @@ public class ManageTransactionForm extends JFrame{
 	int id = -1;
 	int[] categories = new int[999];
 	String[] categories_name = new String[999];
-	JComboBox<String> cb;
+	int[] users = new int[999];
+	String[] user_name = new String[999];
+	JComboBox<String> cb,cbUser;
 	private void fillTable(){
 		dtm = new DefaultTableModel(tHeader, 0);
 		con.rs = con
-				.executeQuery("SELECT products.id, product_name, category_name, product_price, product_stock FROM products join categories on products.id = categories.id");
+				.executeQuery("SELECT username,products.id, product_name, category_name, product_price,qty, created_at FROM products join categories on products.id = categories.id join transactions on transactions.product_id = products.id join users on users.id = transactions.user_id");
 		try {
 			int index = 0;
 			while (con.rs.next()) {
@@ -56,7 +58,7 @@ public class ManageTransactionForm extends JFrame{
 	}
 	private void fillComboBox(){
 		con.rs = con
-				.executeQuery("SELECT id,category_name FROM categories");
+				.executeQuery("SELECT id,product_name FROM products");
 		try {
 			int index = 0;
 			
@@ -72,6 +74,24 @@ public class ManageTransactionForm extends JFrame{
 			e.printStackTrace();
 		}
 	}
+	private void fillCbUser(){
+		con.rs = con
+				.executeQuery("SELECT id,username FROM users");
+		try {
+			int index = 0;
+			
+			while (con.rs.next()) {
+				users[index] = Integer.parseInt(con.rs.getObject(1)+ "") ;
+				user_name[index] = con.rs.getObject(2)+ "" ;
+				cbUser.addItem(con.rs.getObject(2) + "");
+				index++;
+			}
+			idUser = users[0];
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	private int findIndex(String text){
 		for(int i=0;i<categories_name.length;i++){
 			
@@ -81,19 +101,30 @@ public class ManageTransactionForm extends JFrame{
 		}
 		return -1;
 	}
-	int idCate = -1;
+	private int findIndexUser(String text){
+		for(int i=0;i<user_name.length;i++){
+			
+			if(text.equals(user_name[i])){
+				return i;
+			}
+		}
+		return -1;
+	}
+	int idCate = -1,idUser = -1;
 	public ManageTransactionForm() {
 		tHeader = new Vector<Object>();
 		cb = new JComboBox<>();
-		JTextField productName = new JTextField();
-		JTextField productPrice = new JTextField();
-		JTextField productStock = new JTextField();
+		cbUser = new JComboBox<>();
+
+		JTextField qty = new JTextField();
 		tHeader.add("No");
+		tHeader.add("User Name");
 		tHeader.add("Product Id");
 		tHeader.add("Product Name");
 		tHeader.add("Product Category");
 		tHeader.add("Product Price");
-		tHeader.add("Product Stock");
+		tHeader.add("Qty");
+		tHeader.add("Transaction Date");
 		con = new Connect();
 		JPanel topPanel = new JPanel();
 		table = new JTable(dtm) {
@@ -105,6 +136,7 @@ public class ManageTransactionForm extends JFrame{
 		};
 		fillTable();
 		fillComboBox();
+		fillCbUser();
 		table.addMouseListener(new MouseListener() {
 			
 			@Override
@@ -133,14 +165,10 @@ public class ManageTransactionForm extends JFrame{
 			
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
-				id = Integer.parseInt(table.getValueAt(table.getSelectedRow(), 1) + "");
-				productName.setText(table.getValueAt(table.getSelectedRow(), 2) + "");
+				cbUser.setSelectedIndex(findIndexUser(table.getValueAt(table.getSelectedRow(), 1)+""));
+				id = Integer.parseInt(table.getValueAt(table.getSelectedRow(), 2) + "");
 				cb.setSelectedIndex(findIndex(table.getValueAt(table.getSelectedRow(), 3)+""));
-				productPrice.setText(table.getValueAt(table.getSelectedRow(), 4) + "");
-				productStock.setText(table.getValueAt(table.getSelectedRow(), 5) + "");
-				
-				
+				qty.setText(table.getValueAt(table.getSelectedRow(), 6) + "");
 			}
 		});
 		JScrollPane pane = new JScrollPane(table);
@@ -153,7 +181,6 @@ public class ManageTransactionForm extends JFrame{
 		GridLayout gridLayout = new GridLayout(4,2);
 		gridLayout.setHgap(20);
 		JPanel formPanel = new JPanel(gridLayout);
-		JLabel lbl = new JLabel("Product Name");
 		cb.addItemListener(new ItemListener() {
 			
 			@Override
@@ -164,15 +191,12 @@ public class ManageTransactionForm extends JFrame{
 		
 		
 		
-		
-		formPanel.add(lbl);
-		formPanel.add(productName);
-		formPanel.add(new JLabel("Product Category"));
+		formPanel.add(new JLabel("User Name"));
+		formPanel.add(cbUser);
+		formPanel.add(new JLabel("Product Name"));
 		formPanel.add(cb);
-		formPanel.add(new JLabel("Product Price"));
-		formPanel.add(productPrice);
-		formPanel.add(new JLabel("Product Stock"));
-		formPanel.add(productStock);
+		formPanel.add(new JLabel("Qty"));
+		formPanel.add(qty);
 		
 		
 		JPanel bottomPanel = new JPanel();
@@ -193,15 +217,10 @@ public class ManageTransactionForm extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(productName.getText().length() == 0){
-					JOptionPane.showMessageDialog(null, "productName must be filled");
-				}else if(productPrice.getText().length() == 0){
-					JOptionPane.showMessageDialog(null, "productPrice must be filled");
-				}else if(productStock.getText().length() == 0){
-					JOptionPane.showMessageDialog(null, "productStock must be filled");
+				if(qty.getText().length() == 0 || Integer.parseInt(qty.getText()) <= 0){
+					JOptionPane.showMessageDialog(null, "Input valid qty!");
 				}else{
-					con.executeInsertToProduct(productName.getText(), idCate, Integer.parseInt(productPrice.getText()), Integer.parseInt(productStock.getText()));
-			
+					con.executeInsertToTransaction(idUser, idCate,Integer.parseInt(qty.getText()));
 					JOptionPane.showMessageDialog(null, "success insert data");
 					fillTable();
 				}
@@ -212,15 +231,14 @@ public class ManageTransactionForm extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				if(productName.getText().length() == 0 || id == -1){
-					JOptionPane.showMessageDialog(null, "select product want to be delete");
+				if(qty.getText().length() == 0 || idCate < 1 || idUser < 1){
+					JOptionPane.showMessageDialog(null, "select transaction want to be delete");
 				}else{
-					String query = "delete from products where id = " + id;
+					String query = "delete from transactions where id = " + id;
 					con.executeUpdate(query);
-					productName.setText("");
-					productPrice.setText("");
-					productStock.setText("");
 					cb.setSelectedIndex(0);
+					cbUser.setSelectedIndex(0);
+					qty.setText("");
 					id = -1;
 					JOptionPane.showMessageDialog(null, "delete success");
 				}
@@ -232,26 +250,13 @@ public class ManageTransactionForm extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				if(productName.getText().length() == 0 || id == -1){
-					JOptionPane.showMessageDialog(null, "select product want to be update");
-				}else{
-					String query = "update products set product_name = '"+productName.getText()+"', product_category_id = "+idCate+", product_price = "+Integer.parseInt(productPrice.getText())+", product_stock = "+Integer.parseInt(productStock.getText())+" where id = " + id;
-					con.executeUpdate(query);
-					productName.setText("");
-
-					productPrice.setText("");
-					productStock.setText("");
-					cb.setSelectedIndex(0);
-					id = -1;
-					JOptionPane.showMessageDialog(null, "update success");
-				}
-				fillTable();
+				
 			}
 		});
 		
 		
 		bottomPanel.add(insertBtn);
-		bottomPanel.add(updateBtn);
+//		bottomPanel.add(updateBtn);
 		bottomPanel.add(deleteBtn);
 		bottomPanel.add(backBtn);
 		centerPanel.add(formPanel);

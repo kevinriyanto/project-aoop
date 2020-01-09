@@ -8,7 +8,7 @@ public class Main {
 			
 			@Override
 			public void run() {
-				new ManageProductForm();
+				new ManageTransactionForm();
 			}
 		});
 	}
@@ -17,5 +17,4 @@ public class Main {
 		// TODO Auto-generated method stub
 		new Main();
 	}
-
 }
